@@ -22,7 +22,7 @@ import coil.compose.AsyncImage
 import com.example.eni_shop.bo.Article
 import com.example.eni_shop.repository.ArticleRepository
 import com.example.eni_shop.ui.common.EniShopTopBar
-import com.example.eni_shop.ui.common.toFrenchFormat
+import com.example.eni_shop.utils.toFrenchFormat
 
 @Composable
 fun ArticleDetailScreen(modifier: Modifier = Modifier) {

@@ -1,4 +1,4 @@
-package com.example.eni_shop.ui.common
+package com.example.eni_shop.utils
 
 import java.text.SimpleDateFormat
 import java.util.Date
