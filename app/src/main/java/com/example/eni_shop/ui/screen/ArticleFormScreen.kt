@@ -9,9 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -83,13 +87,23 @@ fun DropDownCategories(modifier: Modifier = Modifier) {
 
     val categories = listOf("electronics", "jewelery", "men's clothing", "women's clothing")
     var expanded by rememberSaveable { mutableStateOf(false) }
+    var selectedCategory by rememberSaveable { mutableStateOf("") }
 
     Column {
         EniShopTextField(
             label = "Catégorie",
             enabled = false,
+            value = selectedCategory,
             modifier = Modifier.clickable {
                 expanded = !expanded
+            }
+            ,
+            placeholder = { Text(text = "Choisir une catégorie") },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "Drop Down // null"
+                )
             }
         )
         DropdownMenu(
@@ -105,7 +119,12 @@ fun DropDownCategories(modifier: Modifier = Modifier) {
                         }
 
                     )
-                }, onClick = {})
+                }, onClick = {
+                    selectedCategory = category.replaceFirstChar {
+                        it.uppercase()
+                    }
+                    expanded = false
+                })
             }
         }
     }
