@@ -9,6 +9,7 @@ import com.example.eni_shop.bo.Article
 import com.example.eni_shop.repository.ArticleRepository
 import com.example.eni_shop.ui.screen.ArticleDetailScreen
 import com.example.eni_shop.ui.screen.ArticleFormScreen
+import com.example.eni_shop.ui.screen.ArticleListScreen
 import com.example.eni_shop.ui.theme.ENISHOPTheme
 
 //logt -> tab
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ENISHOPTheme {
-                ArticleFormScreen()
+                ArticleListScreen()
             }
         }
     }

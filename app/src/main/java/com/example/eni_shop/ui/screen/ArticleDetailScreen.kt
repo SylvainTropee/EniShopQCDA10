@@ -30,7 +30,7 @@ fun ArticleDetailScreen(modifier: Modifier = Modifier) {
     Scaffold(
         topBar = { EniShopTopBar() }
     ) {
-        ArticleDetail(ArticleRepository.getArticle(3)!!, modifier = Modifier.padding(it))
+        ArticleDetail(ArticleRepository().getArticle(3)!!, modifier = Modifier.padding(it))
     }
 }
 
