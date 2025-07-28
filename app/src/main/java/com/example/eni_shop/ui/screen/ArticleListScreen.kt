@@ -52,16 +52,8 @@ fun ArticleListScreen(
 ) {
 
     val categories by articleListViewModel.categories.collectAsState()
-    val articles by articleListViewModel.articles.collectAsState()
-    var categorySelected by rememberSaveable { mutableStateOf("") }
-
-    val filteredArticles = if (categorySelected != ""){
-        articles.filter {
-            it.category == categorySelected
-        }
-    }else{
-        articles
-    }
+    val articles by articleListViewModel.filteredArticles.collectAsState()
+    val categorySelected by articleListViewModel.selectedCategory.collectAsState()
 
     Scaffold(
         topBar = { EniShopTopBar() }
@@ -75,10 +67,10 @@ fun ArticleListScreen(
                 categories = categories,
                 categorySelected = categorySelected,
                 onCategoryChange = {
-                    categorySelected = it
+                    articleListViewModel.updateSelectedCategory(it)
                 }
             )
-            ArticleList(articles = filteredArticles)
+            ArticleList(articles = articles)
         }
     }
 }
