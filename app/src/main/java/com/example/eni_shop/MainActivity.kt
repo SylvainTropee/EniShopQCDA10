@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ENISHOPTheme {
-                ArticleListScreen()
+                ArticleDetailScreen(id = 2)
             }
         }
     }
