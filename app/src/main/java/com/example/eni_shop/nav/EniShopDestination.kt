@@ -1,4 +1,4 @@
-package com.example.eni_shop
+package com.example.eni_shop.nav
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
