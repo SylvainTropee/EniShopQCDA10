@@ -39,6 +39,7 @@ import com.example.eni_shop.vm.ArticleDetailViewModel
 @Composable
 fun ArticleDetailScreen(
     id: Long,
+    navigationIcon : @Composable () -> Unit = {},
     articleDetailViewModel: ArticleDetailViewModel = viewModel(factory = ArticleDetailViewModel.Factory),
     modifier: Modifier = Modifier
 ) {
@@ -50,7 +51,7 @@ fun ArticleDetailScreen(
     }
 
     Scaffold(
-        topBar = { EniShopTopBar() }
+        topBar = { EniShopTopBar(navigationIcon = navigationIcon) }
     ) { paddingValues ->
         article?.let {
             ArticleDetail(article = it, modifier = Modifier.padding(paddingValues))

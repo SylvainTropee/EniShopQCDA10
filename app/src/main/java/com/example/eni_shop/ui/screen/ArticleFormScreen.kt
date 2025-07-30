@@ -36,10 +36,13 @@ import com.example.eni_shop.ui.common.EniShopTextField
 import com.example.eni_shop.ui.common.EniShopTopBar
 
 @Composable
-fun ArticleFormScreen(modifier: Modifier = Modifier) {
+fun ArticleFormScreen(
+    navigationIcon: @Composable () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
 
     Scaffold(
-        topBar = { EniShopTopBar() }) {
+        topBar = { EniShopTopBar(navigationIcon = navigationIcon) }) {
         ArticleForm(modifier = Modifier.padding(it))
     }
 }
@@ -96,8 +99,7 @@ fun DropDownCategories(modifier: Modifier = Modifier) {
             value = selectedCategory,
             modifier = Modifier.clickable {
                 expanded = !expanded
-            }
-            ,
+            },
             placeholder = { Text(text = "Choisir une catégorie") },
             trailingIcon = {
                 Icon(
@@ -134,7 +136,7 @@ fun DropDownCategories(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun Preview() {
-    ArticleFormScreen()
+    //ArticleFormScreen()
 }
 
 

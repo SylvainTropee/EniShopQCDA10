@@ -2,6 +2,7 @@ package com.example.eni_shop.ui.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,9 +16,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -47,6 +53,8 @@ import com.example.eni_shop.vm.ArticleListViewModel
 
 @Composable
 fun ArticleListScreen(
+    onNavigateToArticleDetail: (Long) -> Unit,
+    onNavigateToArticleAdd: () -> Unit,
     modifier: Modifier = Modifier,
     articleListViewModel: ArticleListViewModel = viewModel(factory = ArticleListViewModel.Factory)
 ) {
@@ -56,7 +64,8 @@ fun ArticleListScreen(
     val categorySelected by articleListViewModel.selectedCategory.collectAsState()
 
     Scaffold(
-        topBar = { EniShopTopBar() }
+        topBar = { EniShopTopBar() },
+        floatingActionButton = { ArticleListFAB(onNavigateToArticleAdd = onNavigateToArticleAdd) }
     ) {
         Column(
             modifier = Modifier
@@ -70,7 +79,10 @@ fun ArticleListScreen(
                     articleListViewModel.updateSelectedCategory(it)
                 }
             )
-            ArticleList(articles = articles)
+            ArticleList(
+                articles = articles,
+                onNavigateToArticleDetail = onNavigateToArticleDetail
+            )
         }
     }
 }
@@ -78,6 +90,7 @@ fun ArticleListScreen(
 @Composable
 fun ArticleList(
     articles: List<Article>,
+    onNavigateToArticleDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -87,7 +100,10 @@ fun ArticleList(
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         items(articles) { article ->
-            ArticleItem(article = article)
+            ArticleItem(
+                article = article,
+                onNavigateToArticleDetail = onNavigateToArticleDetail
+            )
         }
     }
 
@@ -97,11 +113,15 @@ fun ArticleList(
 @Composable
 fun ArticleItem(
     article: Article,
+    onNavigateToArticleDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.clickable {
+            onNavigateToArticleDetail(article.id)
+        }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -172,12 +192,31 @@ fun CategoryFilterChip(
             )
         }
     }
+}
 
+@Composable
+fun ArticleListFAB(
+    onNavigateToArticleAdd : () -> Unit,
+    modifier: Modifier = Modifier) {
+
+    FloatingActionButton(
+        onClick = onNavigateToArticleAdd,
+        shape = CircleShape,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = "Ajouter un article",
+            modifier = Modifier.size(52.dp)
+        )
+
+    }
 
 }
+
 
 @Preview
 @Composable
 private fun Preview() {
-    ArticleListScreen()
+    //ArticleListScreen()
 }
