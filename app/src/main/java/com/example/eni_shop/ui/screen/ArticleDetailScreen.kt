@@ -2,6 +2,7 @@ package com.example.eni_shop.ui.screen
 
 import android.app.SearchManager
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,12 +40,15 @@ import com.example.eni_shop.vm.ArticleDetailViewModel
 @Composable
 fun ArticleDetailScreen(
     id: Long,
-    navigationIcon : @Composable () -> Unit = {},
+    navigationIcon: @Composable () -> Unit = {},
     articleDetailViewModel: ArticleDetailViewModel = viewModel(factory = ArticleDetailViewModel.Factory),
     modifier: Modifier = Modifier
 ) {
 
     val article by articleDetailViewModel.article.collectAsState()
+    val isFav by articleDetailViewModel.isFav.collectAsState()
+
+    val context = LocalContext.current
 
     LaunchedEffect(id) {
         articleDetailViewModel.loadArticle(id)
@@ -53,15 +57,38 @@ fun ArticleDetailScreen(
     Scaffold(
         topBar = { EniShopTopBar(navigationIcon = navigationIcon) }
     ) { paddingValues ->
-        article?.let {
-            ArticleDetail(article = it, modifier = Modifier.padding(paddingValues))
+        article?.let { it ->
+            ArticleDetail(
+                article = it,
+                isFav = isFav,
+                modifier = Modifier.padding(paddingValues),
+                onCheckedChange = { isCheckedFav ->
+                    if (isCheckedFav) {
+                        articleDetailViewModel.addArticleToFav()
+                        Toast.makeText(
+                            context,
+                            "Article enregistré des favoris",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        articleDetailViewModel.removeArticleToFav()
+                        Toast.makeText(context, "Article supprimé des favoris", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            )
         }
     }
 }
 
 
 @Composable
-fun ArticleDetail(article: Article, modifier: Modifier = Modifier) {
+fun ArticleDetail(
+    article: Article,
+    onCheckedChange: (Boolean) -> Unit,
+    isFav: Boolean,
+    modifier: Modifier = Modifier
+) {
 
     val context = LocalContext.current
 
@@ -76,20 +103,21 @@ fun ArticleDetail(article: Article, modifier: Modifier = Modifier) {
             text = article.name,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Justify,
-            modifier = Modifier.testTag("articleTitle")
+            modifier = Modifier
+                .testTag("articleTitle")
                 .clickable {
 //                Intent(Intent.ACTION_WEB_SEARCH).also {
 //                    it.putExtra(SearchManager.QUERY, "${article.name} eni shop")
 //                    context.startActivity(it)
 //                }
 
-                Intent(
-                    Intent.ACTION_VIEW,
-                    "https://www.google.com/search?q=${article.name}+eni+shop".toUri()
-                ).also {
-                    context.startActivity(it)
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        "https://www.google.com/search?q=${article.name}+eni+shop".toUri()
+                    ).also {
+                        context.startActivity(it)
+                    }
                 }
-            }
         )
 
         Surface(
@@ -125,7 +153,7 @@ fun ArticleDetail(article: Article, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.Center
         ) {
             Checkbox(
-                checked = false, onCheckedChange = {}
+                checked = isFav, onCheckedChange = onCheckedChange
             )
             Text(text = "Favoris ?")
         }

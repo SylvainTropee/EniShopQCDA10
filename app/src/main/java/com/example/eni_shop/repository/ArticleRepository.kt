@@ -2,22 +2,31 @@ package com.example.eni_shop.repository
 
 import com.example.eni_shop.bo.Article
 import com.example.eni_shop.dao.ArticleDAO
-import com.example.eni_shop.dao.DaoFactory
 import com.example.eni_shop.dao.DaoType
 
-class ArticleRepository {
+class ArticleRepository(
+    private val articleDAOMemoryImpl: ArticleDAO,
+    private val articleDAORoomImpl : ArticleDAO
+) {
 
-    private val articleDAO: ArticleDAO = DaoFactory.createArticleDAO(DaoType.MEMORY)
-
-    fun getArticle(id: Long): Article? {
-        return articleDAO.findById(id)
+    private fun getDao(type: DaoType) = when(type){
+        DaoType.MEMORY -> articleDAOMemoryImpl
+        else -> articleDAORoomImpl
     }
 
-    fun addArticle(article: Article): Long {
-        return articleDAO.insert(article)
+    suspend fun getArticle(id: Long, daoType: DaoType = DaoType.MEMORY): Article? {
+        return getDao(daoType).findById(id)
     }
 
-    fun getAllArticles(): List<Article> {
-        return articleDAO.findAll()
+    suspend fun addArticle(article: Article, daoType: DaoType = DaoType.MEMORY): Long {
+        return getDao(daoType).insert(article)
+    }
+
+    suspend fun getAllArticles(daoType: DaoType = DaoType.MEMORY): List<Article> {
+        return getDao(daoType).findAll()
+    }
+
+    suspend fun deleteArticle(article: Article, daoType: DaoType = DaoType.MEMORY){
+        return getDao(daoType).delete(article)
     }
 }

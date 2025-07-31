@@ -36,19 +36,23 @@ class ArticleDAOMemoryImpl : ArticleDAO {
         )
     )
 
-    override fun findById(id: Long): Article? {
+    override suspend fun findById(id: Long): Article? {
         return articles.find { article ->
             article.id == id
         }
     }
 
-    override fun insert(article: Article): Long {
+    override suspend fun insert(article: Article): Long {
         article.id = articles.size.toLong() + 1
         articles.add(article)
         return article.id
     }
 
-    override fun findAll(): List<Article> {
+    override suspend fun findAll(): List<Article> {
         return articles
+    }
+
+    override suspend fun delete(article: Article) {
+        articles.remove(article)
     }
 }
