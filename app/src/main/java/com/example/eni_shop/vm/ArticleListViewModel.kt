@@ -10,6 +10,7 @@ import com.example.eni_shop.bo.Article
 import com.example.eni_shop.dao.DaoFactory
 import com.example.eni_shop.dao.DaoType
 import com.example.eni_shop.db.AppDatabase
+import com.example.eni_shop.network.ArticleService
 import com.example.eni_shop.repository.ArticleRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,8 +37,7 @@ class ArticleListViewModel(private val articleRepository: ArticleRepository) : V
         viewModelScope.launch(Dispatchers.IO) {
             _articles.value = articleRepository.getAllArticles()
             _filteredArticles.value = _articles.value
-            _categories.value =
-                listOf("electronics", "jewelery", "men's clothing", "women's clothing")
+            _categories.value = articleRepository.getCategories()
         }
     }
 
@@ -74,7 +74,7 @@ class ArticleListViewModel(private val articleRepository: ArticleRepository) : V
 
                 return ArticleListViewModel(
                     ArticleRepository(
-                        articleDAOMemoryImpl = DaoFactory.createArticleDAO(DaoType.MEMORY),
+                        articleService = ArticleService.callFakeStoreApi.retrofitService,
                         articleDAORoomImpl = AppDatabase.getInstance(application.applicationContext)
                             .getArticleDAO()
                     )

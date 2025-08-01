@@ -9,6 +9,7 @@ import com.example.eni_shop.bo.Article
 import com.example.eni_shop.dao.DaoFactory
 import com.example.eni_shop.dao.DaoType
 import com.example.eni_shop.db.AppDatabase
+import com.example.eni_shop.network.ArticleService
 import com.example.eni_shop.repository.ArticleRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ class ArticleDetailViewModel(private val articleRepository: ArticleRepository) :
 
     private val _isFav = MutableStateFlow<Boolean>(false)
     val isFav = _isFav.asStateFlow()
+
 
     fun loadArticle(articleId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -65,7 +67,7 @@ class ArticleDetailViewModel(private val articleRepository: ArticleRepository) :
 
                 return ArticleDetailViewModel(
                     ArticleRepository(
-                        articleDAOMemoryImpl = DaoFactory.createArticleDAO(DaoType.MEMORY),
+                        articleService = ArticleService.callFakeStoreApi.retrofitService,
                         articleDAORoomImpl = AppDatabase.getInstance(application.applicationContext)
                             .getArticleDAO()
                     )
